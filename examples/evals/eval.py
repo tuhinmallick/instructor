@@ -109,11 +109,12 @@ class StreamingAccumulator:
         if key_name is None:
             key_name = ""
         n = sum(self.counter.values())
-        summaries = {}
-        summaries["counter"] = self.counter
-        summaries["unique_count"] = len(self.unique_values)
-        summaries["missing_values"] = self.missing_values
-        summaries["_reverse_lookup"] = dict(self.reverse_lookup)
+        summaries = {
+            "counter": self.counter,
+            "unique_count": len(self.unique_values),
+            "missing_values": self.missing_values,
+            "_reverse_lookup": dict(self.reverse_lookup),
+        }
         if n > 0:
             if all(isinstance(value, (bool)) for value in self.unique_values):
                 summaries["mean"] = self.sum / n

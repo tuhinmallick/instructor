@@ -41,7 +41,7 @@ def test_multi_user(mode):
             max_tokens=1000,
         )
 
-    resp = [user for user in stream_extract(input="Jason is 20, Sarah is 30")]
+    resp = list(stream_extract(input="Jason is 20, Sarah is 30"))
     assert len(resp) == 2
     assert resp[0].name == "Jason"
     assert resp[0].age == 20

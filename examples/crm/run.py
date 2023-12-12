@@ -40,7 +40,7 @@ class CRMSearchQuery(BaseModel):
 
 
 def query_crm(query: str) -> CRMSearchQuery:
-    queries = client.chat.completions.create(
+    return client.chat.completions.create(
         model="gpt-3.5-turbo",
         response_model=CRMSearchQuery,
         messages=[
@@ -54,7 +54,6 @@ def query_crm(query: str) -> CRMSearchQuery:
             {"role": "user", "content": query},
         ],
     )
-    return queries
 
 
 if __name__ == "__main__":

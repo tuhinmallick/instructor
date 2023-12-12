@@ -91,7 +91,7 @@ def handle_response_model(
                 "type": "function",
                 "function": {"name": response_model.openai_schema["name"]},
             }
-        elif mode == Mode.JSON or mode == Mode.MD_JSON:
+        elif mode in [Mode.JSON, Mode.MD_JSON]:
             if mode == Mode.JSON:
                 new_kwargs["response_format"] = {"type": "json_object"}
                 message = f"""Make sure that your response to any message matches the json_schema below,
