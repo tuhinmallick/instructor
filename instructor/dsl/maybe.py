@@ -74,6 +74,4 @@ def Maybe(model: Type[BaseModel]) -> MaybeBase:
         ),
     }
 
-    MaybeModel = create_model(f"Maybe{model.__name__}", __base__=MaybeBase, **fields)
-
-    return MaybeModel  # type: ignore
+    return create_model(f"Maybe{model.__name__}", __base__=MaybeBase, **fields)

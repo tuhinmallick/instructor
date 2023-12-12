@@ -8,8 +8,7 @@ class AnswerWithCitation(BaseModel):
     @field_validator("citation")
     @classmethod
     def remove_stopwords(cls, v: str, info: ValidationInfo):
-        context = info.context
-        if context:
+        if context := info.context:
             text_chunks = context.get("text_chunk")
             if v not in text_chunks:
                 raise ValueError(f"Citation `{v}` not found in text chunks")

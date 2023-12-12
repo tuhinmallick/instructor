@@ -78,7 +78,7 @@ class RewrittenSummary(BaseModel):
 
     @field_validator("missing")
     def has_missing_entities(cls, missing_entities: List[str]):
-        if len(missing_entities) == 0:
+        if not missing_entities:
             raise ValueError(
                 "You must identify 1-3 informative Entities from the Article which are missing from the previously generated summary to be used in a new summary"
             )
@@ -86,8 +86,8 @@ class RewrittenSummary(BaseModel):
 
     @field_validator("absent")
     def has_no_absent_entities(cls, absent_entities: List[str]):
-        absent_entity_string = ",".join(absent_entities)
-        if len(absent_entities) > 0:
+        if absent_entities:
+            absent_entity_string = ",".join(absent_entities)
             print(f"Detected absent entities of {absent_entity_string}")
             raise ValueError(
                 f"Do not omit the following Entities {absent_entity_string} from the new summary"
@@ -96,7 +96,6 @@ class RewrittenSummary(BaseModel):
 
 
 def summarize_article(article: str, summary_steps: int = 3):
-    summary_chain = []
     # We first generate an initial summary
     summary: InitialSummary = client.chat.completions.create(
         model="gpt-4-0613",
@@ -114,8 +113,8 @@ def summarize_article(article: str, summary_steps: int = 3):
         ],
         max_retries=2,
     )
-    summary_chain.append(summary.summary)
-    for i in range(summary_steps):
+    summary_chain = [summary.summary]
+    for _ in range(summary_steps):
         new_summary: RewrittenSummary = client.chat.completions.create(
             model="gpt-4-0613",
             messages=[

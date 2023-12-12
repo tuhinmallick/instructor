@@ -83,7 +83,7 @@ def create_app(
     api_path: str, task_name: str, json_schema_path: str, prompt_template: str
 ) -> str:
     if not api_path.startswith("/"):
-        api_path = "/" + api_path
+        api_path = f"/{api_path}"
 
     schema = load_json_schema(json_schema_path)
     title = schema["title"]

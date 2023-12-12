@@ -34,8 +34,7 @@ def get_signature_from_fn(fn: Callable) -> str:
     """
     sig = inspect.signature(fn)
     lines = f"def {fn.__name__}{sig}"
-    docstring = inspect.getdoc(fn)
-    if docstring:
+    if docstring := inspect.getdoc(fn):
         formatted_docstring = f'"""\n{docstring}\n"""'
     else:
         formatted_docstring = ""
@@ -50,8 +49,7 @@ def format_function(func: Callable) -> str:
     source_lines = inspect.getsourcelines(func)
     definition = " ".join(source_lines[0]).strip()
 
-    docstring = inspect.getdoc(func)
-    if docstring:
+    if docstring := inspect.getdoc(func):
         formatted_docstring = f'"""\n{docstring}\n"""'
     else:
         formatted_docstring = ""
@@ -241,7 +239,7 @@ class Instructions:
         )
         call_args = ", ".join(filter(None, [str_args, str_kwargs]))
 
-        function_body = {
+        return {
             "messages": [
                 {
                     "role": "system",
@@ -253,4 +251,3 @@ class Instructions:
                 },
             ],
         }
-        return function_body

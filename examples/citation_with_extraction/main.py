@@ -117,10 +117,7 @@ def get_api_key(request: Request):
     if auth is None:
         raise HTTPException(status_code=401, detail="Missing Authorization header")
 
-    if auth.startswith("Bearer "):
-        return auth.replace("Bearer ", "")
-
-    return None
+    return auth.replace("Bearer ", "") if auth.startswith("Bearer ") else None
 
 
 # Route to handle SSE events and return users
@@ -129,19 +126,3 @@ async def extract(question: Question, openai_key=Depends(get_api_key)):
     raise Exception(
         "The 'openai.api_key' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(api_key=openai_key)'"
     )
-    facts = stream_extract(question)
-
-    async def generate():
-        for fact in facts:
-            logger.info(f"Fact: {fact}")
-            spans = list(fact.get_spans(question.context))
-            resp = {
-                "body": fact.fact,
-                "spans": spans,
-                "citation": [question.context[a:b] for (a, b) in spans],
-            }
-            resp_json = json.dumps(resp)
-            yield f"data: {resp_json}"
-        yield "data: [DONE]"
-
-    return StreamingResponse(generate(), media_type="text/event-stream")
